@@ -8,20 +8,21 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class Pong1 extends JFrame implements ActionListener, KeyListener {
-    private int ancho = 700;
+    private int ancho = 800;
     private int alto = 600;
     private int anchoPaleta = 100;
     private int altoPaleta = 20;
     private int tamañoBola = 20;
-    private int velocidadPaleta = 10;
-    private int velocidadBolaX = 5;
-    private int velocidadBolaY = 5;
+    private int velocidadPaleta = 15;
+    private int velocidadBolaX = 10;
+    private int velocidadBolaY = 10;
     private int posicionJugadorX = ancho / 2 - anchoPaleta / 2;
     private int posicionJugadorY = alto - altoPaleta - 20;
     private int posicionBolaX = ancho / 2 - tamañoBola / 2;
     private int posicionBolaY = alto / 2 - tamañoBola / 2;
     private int vidas = 3;
     private int puntuacion = 0;
+    
     private ImageIcon backgroundImage; // Variable para la imagen de fondo
     
     boolean colisionPaleta = (posicionBolaY + tamañoBola >= posicionJugadorY &&
@@ -36,23 +37,22 @@ public class Pong1 extends JFrame implements ActionListener, KeyListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Cargar la imagen de fondo desde un archivo (ajusta la ruta del archivo según sea necesario)
+   
         backgroundImage = new ImageIcon(getClass().getResource("fondo.jpg"));
 
-        Timer timer = new Timer(25, this);
+        Timer timer = new Timer(30, this);
         timer.start();
 
         addKeyListener(this);
         setFocusable(true);
-        
-        
     }
 
+    @Override
     public void paint(Graphics g) {
         super.paint(g);
 
         // Dibujar la imagen de fondo que abarca todo el panel
-        g.drawImage(backgroundImage.getImage(), 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(backgroundImage.getImage(), 0, 0, getWidth(), getHeight(), this);
 
         // Dibujar la paleta y la bola
         g.setColor(Color.ORANGE);
@@ -62,10 +62,10 @@ public class Pong1 extends JFrame implements ActionListener, KeyListener {
 
         // Dibujar texto de vidas y puntuación
         g.setFont(new Font("Courier New", Font.BOLD, 27));
-        g.drawString("Vidas: " + vidas, ancho / 2 - 330, alto - 500);
-        g.drawString("Puntuación: " + puntuacion, ancho / 2 -330, alto - 470);
+        g.drawString("Vidas: " + vidas, ancho / 2 - 380, alto - 500);
+        g.drawString("Puntuación: " + puntuacion, ancho / 2 - 380, alto - 470);
     }
-
+    
     public void actionPerformed(ActionEvent e) {
         // Rebote en los bordes laterales
         if (posicionBolaX <= 0 || posicionBolaX >= ancho - tamañoBola) {
@@ -121,7 +121,6 @@ public class Pong1 extends JFrame implements ActionListener, KeyListener {
         game.setVisible(true);
     }
 }
-
 
 
 
