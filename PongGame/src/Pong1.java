@@ -8,24 +8,24 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class Pong1 extends JFrame implements ActionListener, KeyListener {
-    private int ancho = 800;
+    private int ancho = 700;
     private int alto = 600;
     private int anchoPaleta = 100;
     private int altoPaleta = 20;
-    private int tamaÒoBola = 20;
+    private int tama√±oBola = 20;
     private int velocidadPaleta = 10;
     private int velocidadBolaX = 5;
     private int velocidadBolaY = 5;
     private int posicionJugadorX = ancho / 2 - anchoPaleta / 2;
     private int posicionJugadorY = alto - altoPaleta - 20;
-    private int posicionBolaX = ancho / 2 - tamaÒoBola / 2;
-    private int posicionBolaY = alto / 2 - tamaÒoBola / 2;
+    private int posicionBolaX = ancho / 2 - tama√±oBola / 2;
+    private int posicionBolaY = alto / 2 - tama√±oBola / 2;
     private int vidas = 3;
     private int puntuacion = 0;
     private ImageIcon backgroundImage; // Variable para la imagen de fondo
     
-    boolean colisionPaleta = (posicionBolaY + tamaÒoBola >= posicionJugadorY &&
-            posicionBolaX + tamaÒoBola >= posicionJugadorX &&
+    boolean colisionPaleta = (posicionBolaY + tama√±oBola >= posicionJugadorY &&
+            posicionBolaX + tama√±oBola >= posicionJugadorX &&
             posicionBolaX <= posicionJugadorX + anchoPaleta);
 
 
@@ -36,7 +36,7 @@ public class Pong1 extends JFrame implements ActionListener, KeyListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Cargar la imagen de fondo desde un archivo (ajusta la ruta del archivo seg˙n sea necesario)
+        // Cargar la imagen de fondo desde un archivo (ajusta la ruta del archivo seg√∫n sea necesario)
         backgroundImage = new ImageIcon(getClass().getResource("fondo.jpg"));
 
         Timer timer = new Timer(25, this);
@@ -58,43 +58,43 @@ public class Pong1 extends JFrame implements ActionListener, KeyListener {
         g.setColor(Color.ORANGE);
         g.fillRect(posicionJugadorX, posicionJugadorY, anchoPaleta, altoPaleta);
         g.setColor(Color.WHITE);
-        g.fillOval(posicionBolaX, posicionBolaY, tamaÒoBola, tamaÒoBola);
+        g.fillOval(posicionBolaX, posicionBolaY, tama√±oBola, tama√±oBola);
 
-        // Dibujar texto de vidas y puntuaciÛn
+        // Dibujar texto de vidas y puntuaci√≥n
         g.setFont(new Font("Courier New", Font.BOLD, 27));
-        g.drawString("Vidas: " + vidas, ancho / 2 - 370, alto - 500);
-        g.drawString("PuntuaciÛn: " + puntuacion, ancho / 2 -370, alto - 470);
+        g.drawString("Vidas: " + vidas, ancho / 2 - 330, alto - 500);
+        g.drawString("Puntuaci√≥n: " + puntuacion, ancho / 2 -330, alto - 470);
     }
 
     public void actionPerformed(ActionEvent e) {
         // Rebote en los bordes laterales
-        if (posicionBolaX <= 0 || posicionBolaX >= ancho - tamaÒoBola) {
+        if (posicionBolaX <= 0 || posicionBolaX >= ancho - tama√±oBola) {
             velocidadBolaX = -velocidadBolaX;
         }
 
         // Rebote en la parte superior
-        if (posicionBolaY <= 0) {
+        if (posicionBolaY <= 20||posicionBolaY >= alto - tama√±oBola) {
             velocidadBolaY = -velocidadBolaY;
         }
 
-        // ColisiÛn con la paleta del jugador
-        if (posicionBolaY + tamaÒoBola >= posicionJugadorY &&
-                posicionBolaX + tamaÒoBola >= posicionJugadorX &&
+        // Colisi√≥n con la paleta del jugador
+        if (posicionBolaY + tama√±oBola >= posicionJugadorY &&
+                posicionBolaX + tama√±oBola >= posicionJugadorX &&
                 posicionBolaX <= posicionJugadorX + anchoPaleta) {
             velocidadBolaY = -velocidadBolaY;
             puntuacion++;
         }
 
-        // ColisiÛn con la parte inferior
-        if (posicionBolaY >= alto - tamaÒoBola) {
+        // Colisi√≥n con la parte inferior
+        if (posicionBolaY >= alto - tama√±oBola) {
             vidas--; // El jugador pierde una vida cuando la bola toca la parte inferior
             if (vidas <= 0) {
                 JOptionPane.showMessageDialog(this, "Perdiste!");
                 System.exit(0);
             } else {
                 // Reubicar la bola al centro si hay vidas restantes
-                posicionBolaX = ancho / 2 - tamaÒoBola / 2;
-                posicionBolaY = alto / 2 - tamaÒoBola / 2;
+                posicionBolaX = ancho / 4- tama√±oBola / 4;
+                posicionBolaY = alto / 4- tama√±oBola / 4;
             }
         }
         posicionBolaX += velocidadBolaX;
