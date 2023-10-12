@@ -1,5 +1,4 @@
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,7 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class Pong1 extends JFrame implements ActionListener, KeyListener {
+public class Pong1 extends JPanel implements ActionListener, KeyListener {
     private int ancho = 800;
     private int alto = 600;
     private int anchoPaleta = 100;
@@ -22,34 +21,36 @@ public class Pong1 extends JFrame implements ActionListener, KeyListener {
     private int posicionBolaY = alto / 2 - tamañoBola / 2;
     private int vidas = 3;
     private int puntuacion = 0;
-    
-    private ImageIcon backgroundImage; // Variable para la imagen de fondo
-    
-    boolean colisionPaleta = (posicionBolaY + tamañoBola >= posicionJugadorY &&
-            posicionBolaX + tamañoBola >= posicionJugadorX &&
-            posicionBolaX <= posicionJugadorX + anchoPaleta);
+    private int tiempo = 0; // Contador de tiempo en segundos
+    private Timer timerTiempo; // Timer para el contador de tiempo
 
+    private ImageIcon backgroundImage; // Variable para la imagen de fondo
 
     public Pong1() {
-        setTitle("Juego Pong");
-        setSize(ancho, alto);
-        setResizable(false);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setBackground(Color.BLACK);
+        setPreferredSize(new Dimension(ancho, alto));
+        setFocusable(true);
+        addKeyListener(this);
 
-   
         backgroundImage = new ImageIcon(getClass().getResource("fondo.jpg"));
 
         Timer timer = new Timer(30, this);
         timer.start();
 
-        addKeyListener(this);
-        setFocusable(true);
+        // Inicializa el Timer para el contador de tiempo
+        timerTiempo = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tiempo++;
+                repaint();
+            }
+        });
+        timerTiempo.start();
     }
 
     @Override
-    public void paint(Graphics g) {
-        super.paint(g);
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
         // Dibujar la imagen de fondo que abarca todo el panel
         g.drawImage(backgroundImage.getImage(), 0, 0, getWidth(), getHeight(), this);
@@ -60,50 +61,59 @@ public class Pong1 extends JFrame implements ActionListener, KeyListener {
         g.setColor(Color.WHITE);
         g.fillOval(posicionBolaX, posicionBolaY, tamañoBola, tamañoBola);
 
+        // Dibujar contador de tiempo en la esquina superior derecha
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Courier New", Font.BOLD, 22));
+        g.drawString("Tiempo: " + tiempo + " s",  20, 90);
+
         // Dibujar texto de vidas y puntuación
-        g.setFont(new Font("Courier New", Font.BOLD, 27));
-        g.drawString("Vidas: " + vidas, ancho / 2 - 380, alto - 500);
-        g.drawString("Puntuación: " + puntuacion, ancho / 2 - 380, alto - 470);
-    }
-    
-    public void actionPerformed(ActionEvent e) {
-        // Rebote en los bordes laterales
-        if (posicionBolaX <= 0 || posicionBolaX >= ancho - tamañoBola) {
-            velocidadBolaX = -velocidadBolaX;
-        }
-
-        // Rebote en la parte superior
-        if (posicionBolaY <= 20||posicionBolaY >= alto - tamañoBola) {
-            velocidadBolaY = -velocidadBolaY;
-        }
-
-        // Colisión con la paleta del jugador
-        if (posicionBolaY + tamañoBola >= posicionJugadorY &&
-                posicionBolaX + tamañoBola >= posicionJugadorX &&
-                posicionBolaX <= posicionJugadorX + anchoPaleta) {
-            velocidadBolaY = -velocidadBolaY;
-            puntuacion++;
-        }
-
-        // Colisión con la parte inferior
-        if (posicionBolaY >= alto - tamañoBola) {
-            vidas--; // El jugador pierde una vida cuando la bola toca la parte inferior
-            if (vidas <= 0) {
-                JOptionPane.showMessageDialog(this, "Perdiste!");
-                System.exit(0);
-            } else {
-                // Reubicar la bola al centro si hay vidas restantes
-                posicionBolaX = ancho / 4- tamañoBola / 4;
-                posicionBolaY = alto / 4- tamañoBola / 4;
-            }
-        }
-        posicionBolaX += velocidadBolaX;
-        posicionBolaY += velocidadBolaY;
-        repaint();
+        g.setFont(new Font("Courier New", Font.BOLD, 22));
+        g.drawString("Vidas: " + vidas, 20, 30);
+        g.drawString("Puntuación: " + puntuacion, 20, 60);
     }
 
+public void actionPerformed(ActionEvent e) {
+    // Actualiza la posición de la pelota
+    posicionBolaX += velocidadBolaX;
+    posicionBolaY += velocidadBolaY;
 
-    public void keyTyped(KeyEvent e) {}
+    // Rebote en los bordes laterales
+    if (posicionBolaX <= 0 || posicionBolaX >= ancho - tamañoBola) {
+        velocidadBolaX = -velocidadBolaX;
+    }
+
+    // Rebote en la parte superior
+    if (posicionBolaY <= 20) {
+        velocidadBolaY = -velocidadBolaY;
+    }
+
+    // Pierde una vida si toca el borde inferior
+    if (posicionBolaY >= alto - tamañoBola) {
+        vidas--; // Pierde una vida cuando la bola toca el borde inferior
+        if (vidas <= 0) {
+            JOptionPane.showMessageDialog(this, "Perdiste! Tu puntuacion fue de: "+puntuacion);
+            System.exit(0);
+        } else {
+            // Reubicar la bola al centro si hay vidas restantes
+            posicionBolaX = ancho / 5- tamañoBola / 5;
+            posicionBolaY = alto / 5- tamañoBola / 5;
+        }
+    }
+
+    // Colisión con la paleta del jugador
+    if (posicionBolaY + tamañoBola >= posicionJugadorY &&
+            posicionBolaX + tamañoBola >= posicionJugadorX &&
+            posicionBolaX <= posicionJugadorX + anchoPaleta) {
+        velocidadBolaY = -velocidadBolaY;
+        puntuacion++;
+    }
+
+    // Redibuja la escena
+    repaint();
+}
+
+    public void keyTyped(KeyEvent e) {
+    }
 
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
@@ -114,14 +124,20 @@ public class Pong1 extends JFrame implements ActionListener, KeyListener {
         }
     }
 
-    public void keyReleased(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {
+    }
 
     public static void main(String[] args) {
-        Pong1 game = new Pong1();
-        game.setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Juego Pong");
+            Pong1 game = new Pong1();
+
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.add(game);
+            frame.pack();
+            frame.setResizable(false);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 }
-
-
-
-
