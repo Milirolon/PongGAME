@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 
 public class Pong1 extends JPanel implements ActionListener, KeyListener {
     private int ancho = 800;
@@ -97,9 +98,11 @@ public void actionPerformed(ActionEvent e) {
             System.exit(0);
             
         } else {
-            // Reubicar la bola  si hay vidas restantes
-            posicionBolaX = ancho / 5- tamañoBola / 5;
-            posicionBolaY = alto / 5- tamañoBola / 5;
+        
+        	    // Reubicar la bola en una posición aleatoria en el panel
+        	    posicionBolaX = (int) (Math.random() * (ancho - tamañoBola));
+        	    posicionBolaY = (int) (Math.random() * (alto - tamañoBola));
+      
         }
     }
 
