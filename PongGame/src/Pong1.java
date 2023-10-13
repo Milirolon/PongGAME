@@ -91,10 +91,13 @@ public void actionPerformed(ActionEvent e) {
     if (posicionBolaY >= alto - tamañoBola) {
         vidas--; // Pierde una vida cuando la bola toca el borde inferior
         if (vidas <= 0) {
+        	
+        	 timerTiempo.stop();
             JOptionPane.showMessageDialog(this, "Perdiste! Tu puntuacion fue de: "+puntuacion);
             System.exit(0);
+            
         } else {
-            // Reubicar la bola al centro si hay vidas restantes
+            // Reubicar la bola  si hay vidas restantes
             posicionBolaX = ancho / 5- tamañoBola / 5;
             posicionBolaY = alto / 5- tamañoBola / 5;
         }
